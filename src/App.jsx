@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -450,6 +450,7 @@ function Reviews() {
 }
 
 function CTA() {
+  const galleryRef = useRef(null);
   const gallery = [
     "photo-1507525428034-b723cf961d3e",
     "photo-1470770841072-f978cf4d019e",
@@ -458,6 +459,42 @@ function CTA() {
     "photo-1483347756197-71ef80e95f73",
     "photo-1530789253388-582c481c54b0",
   ];
+
+  useEffect(() => {
+    const galleryElement = galleryRef.current;
+    if (!galleryElement) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          galleryElement.classList.add("is-visible");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(galleryElement);
+    return () => observer.disconnect();
+  }, []);
+
+  function tiltCard(event) {
+    if (event.pointerType === "touch") return;
+
+    const card = event.currentTarget;
+    const bounds = card.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+    card.style.setProperty("--tilt-x", `${-y * 9}deg`);
+    card.style.setProperty("--tilt-y", `${x * 11}deg`);
+  }
+
+  function resetTilt(event) {
+    event.currentTarget.style.setProperty("--tilt-x", "0deg");
+    event.currentTarget.style.setProperty("--tilt-y", "0deg");
+  }
+
   return (
     <section className="section cta-section" id="cta">
       <p className="eyebrow">Ready when you are</p>
@@ -469,15 +506,33 @@ function CTA() {
       <a className="button button-primary" href="#top">
         Book your seat <ArrowRight size={15} />
       </a>
-      <div className="gallery-row" aria-label="Travel inspiration gallery">
+      <div
+        className="gallery-row"
+        aria-label="Travel inspiration gallery"
+        ref={galleryRef}
+      >
         {gallery.map((id, index) => (
-          <img
+          <div
             key={id}
-            src={image(id, 500)}
-            alt=""
-            className={`gallery-${index + 1}`}
-            loading="lazy"
-          />
+            className={`gallery-card gallery-${index + 1}`}
+            style={{
+              "--gallery-index": index,
+              "--float-delay": `${index * -0.65}s`,
+              "--float-duration": `${5.4 + (index % 3) * 0.8}s`,
+              "--resting-rotation": `${index % 2 === 0 ? -1.25 : 1.25}deg`,
+            }}
+            onPointerMove={tiltCard}
+            onPointerLeave={resetTilt}
+          >
+            <div className="gallery-float">
+              <img
+                src={image(id, 500)}
+                alt=""
+                loading="lazy"
+                draggable="false"
+              />
+            </div>
+          </div>
         ))}
       </div>
     </section>

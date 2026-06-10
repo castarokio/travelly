@@ -814,14 +814,59 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 14px;
+  perspective: 1100px;
 }
 
-.gallery-row img {
+.gallery-card {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
   flex: 1;
   min-width: 0;
   height: 128px;
+  opacity: 0;
+  transform: translate3d(0, 54px, 0) scale(0.94);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--gallery-index) * 95ms);
+  will-change: transform, opacity;
+}
+
+.gallery-row.is-visible .gallery-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.gallery-float {
+  width: 100%;
+  height: 100%;
+  animation: gallery-float var(--float-duration) ease-in-out var(--float-delay)
+    infinite;
+  transform-origin: center;
+}
+
+.gallery-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  min-width: 0;
   border-radius: 15px;
   object-fit: cover;
+  box-shadow: 0 12px 28px rgb(30 47 76 / 8%);
+  filter: saturate(0.94) brightness(0.98);
+  transform:
+    rotateX(var(--tilt-x))
+    rotateY(var(--tilt-y))
+    rotateZ(var(--resting-rotation))
+    scale(1);
+  transition:
+    transform 220ms ease-out,
+    filter 300ms ease,
+    box-shadow 300ms ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+  user-select: none;
 }
 
 .gallery-row .gallery-1,
@@ -837,6 +882,32 @@ select:focus-visible {
 .gallery-row .gallery-3,
 .gallery-row .gallery-6 {
   align-self: flex-end;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-card:hover {
+    z-index: 2;
+  }
+
+  .gallery-card:hover img {
+    box-shadow: 0 24px 52px rgb(30 47 76 / 22%);
+    filter: saturate(1.13) brightness(1.04);
+    transform:
+      rotateX(var(--tilt-x))
+      rotateY(var(--tilt-y))
+      rotateZ(0deg)
+      scale(1.055);
+  }
+}
+
+@keyframes gallery-float {
+  0%,
+  100% {
+    transform: translate3d(0, -4px, 0) rotate(-0.45deg);
+  }
+  50% {
+    transform: translate3d(0, 7px, 0) rotate(0.45deg);
+  }
 }
 
 .site-footer {
@@ -1227,7 +1298,7 @@ select:focus-visible {
     overflow: hidden;
   }
 
-  .gallery-row img {
+  .gallery-card {
     min-width: 95px;
   }
 
@@ -1260,6 +1331,21 @@ select:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .gallery-card,
+  .gallery-row.is-visible .gallery-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .gallery-float {
+    animation: none;
+  }
+
+  .gallery-card img,
+  .gallery-card:hover img {
+    transform: none;
+  }
+
   *,
   *::before,
   *::after {
