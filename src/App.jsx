@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import {
   ArrowRight,
   CalendarDays,
@@ -20,8 +23,34 @@ import {
   X,
 } from "lucide-react";
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 const image = (id, width = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
+
+function SplitHeading({ text, className = "" }) {
+  return (
+    <h2
+      className={`split-heading-text ${className}`.trim()}
+      aria-label={text}
+    >
+      {text.split(" ").map((word, index) => (
+        <span
+          className="split-word-mask"
+          aria-hidden="true"
+          key={`${word}-${index}`}
+        >
+          <span
+            className="split-word"
+            style={{ "--word-index": index }}
+          >
+            {word}
+          </span>
+        </span>
+      ))}
+    </h2>
+  );
+}
 
 const destinations = [
   {
@@ -246,12 +275,28 @@ function BookingForm() {
 }
 
 function Hero() {
+  const labelWords = ["It’s", "time", "to", "go"];
+  const trustedWords = ["Trusted", "by", "travelers", "worldwide"];
+
   return (
     <section className="hero" id="top">
       <div className="hero-sky">
+        <div className="hero-media" aria-hidden="true" />
         <div className="hero-orbit hero-orbit-one" />
         <div className="hero-orbit hero-orbit-two" />
-        <p className="hero-note">It’s time to go <Plane size={14} /></p>
+        <p className="hero-note" aria-label="It’s time to go">
+          {labelWords.map((word, index) => (
+            <span
+              className="hero-note-word"
+              aria-hidden="true"
+              style={{ "--word-index": index }}
+              key={word}
+            >
+              {word}
+            </span>
+          ))}
+          <Plane className="hero-note-plane" size={14} aria-hidden="true" />
+        </p>
         <div className="traveler-proof">
           <div className="avatar-stack" aria-hidden="true">
             {[
@@ -262,12 +307,26 @@ function Hero() {
               <img key={id} src={image(id, 80)} alt="" />
             ))}
           </div>
-          <span>Trusted by travelers worldwide</span>
+          <span className="trusted-copy" aria-label="Trusted by travelers worldwide">
+            {trustedWords.map((word, index) => (
+              <span
+                className="trusted-word"
+                aria-hidden="true"
+                style={{ "--word-index": index }}
+                key={word}
+              >
+                {word}
+              </span>
+            ))}
+          </span>
         </div>
-        <h1>
-          Don’t just imagine it,
-          <br />
-          make it happen. Travel.
+        <h1 aria-label="Don’t just imagine it, make it happen. Travel.">
+          <span className="hero-line-mask" aria-hidden="true">
+            <span className="hero-title-line">Don’t just imagine it,</span>
+          </span>
+          <span className="hero-line-mask" aria-hidden="true">
+            <span className="hero-title-line">make it happen. Travel.</span>
+          </span>
         </h1>
       </div>
       <BookingForm />
@@ -279,7 +338,7 @@ function Services() {
   return (
     <section className="section services-section" id="services">
       <div className="section-heading centered">
-        <h2>What services we provide to our customers.</h2>
+        <SplitHeading text="What services we provide to our customers." />
         <p>Plan every part of a remarkable journey in one thoughtful place.</p>
       </div>
       <div className="service-grid">
@@ -308,7 +367,9 @@ function Destinations() {
   return (
     <section className="section destinations-section" id="destinations">
       <div className="section-heading split-heading">
-        <h2>Explore and unwind at the world’s top relaxing spots</h2>
+        <h2 className="destinations-heading">
+          Explore and unwind at the world’s top relaxing spots
+        </h2>
         <p>
           Find a place that fits your pace, from quiet mountain mornings to
           color-soaked city evenings.
@@ -628,8 +689,301 @@ function Footer() {
 }
 
 export default function App() {
+  const appRef = useRef(null);
+
+  useGSAP(
+    () => {
+      const media = gsap.matchMedia();
+
+      media.add(
+        {
+          reduceMotion: "(prefers-reduced-motion: reduce)",
+          mobile: "(max-width: 700px)",
+        },
+        ({ conditions }) => {
+          const { reduceMotion, mobile } = conditions;
+
+          if (reduceMotion) {
+            gsap.set(
+              [
+                ".hero-media",
+                ".hero-note-word",
+                ".hero-note-plane",
+                ".avatar-stack img",
+                ".trusted-word",
+                ".hero-title-line",
+                ".booking-shell",
+                ".split-word",
+              ],
+              { clearProps: "all" },
+            );
+            return;
+          }
+
+          const ease = "power3.out";
+          const heroTimeline = gsap.timeline({ defaults: { ease } });
+
+          heroTimeline
+            .fromTo(".page-shell", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.65 })
+            .from(
+              ".site-header > .logo, .site-header > .app-pill, .desktop-nav, .desktop-signup",
+              { autoAlpha: 0, y: -16, duration: 0.6, stagger: 0.06 },
+              0.12,
+            )
+            .from(".hero-media", { scale: 1.04, duration: 1.8 }, 0.24)
+            .from(
+              ".hero-note-word",
+              { autoAlpha: 0, y: 12, filter: "blur(4px)", duration: 0.58, stagger: 0.04 },
+              0.52,
+            )
+            .from(
+              ".hero-note-plane",
+              { autoAlpha: 0, y: 8, rotate: -8, duration: 0.55 },
+              0.7,
+            )
+            .from(
+              ".avatar-stack img",
+              { autoAlpha: 0, scale: 0.9, duration: 0.55, stagger: 0.08 },
+              0.78,
+            )
+            .from(
+              ".trusted-word",
+              { autoAlpha: 0, y: 8, duration: 0.52, stagger: 0.045 },
+              0.94,
+            )
+            .from(
+              ".hero-title-line",
+              {
+                autoAlpha: 0,
+                yPercent: 115,
+                filter: "blur(8px)",
+                duration: 1.05,
+                stagger: 0.12,
+              },
+              1.05,
+            )
+            .from(
+              ".booking-shell",
+              { autoAlpha: 0, y: mobile ? 18 : 28, filter: "blur(8px)", duration: 0.75 },
+              1.76,
+            );
+
+          gsap.from(".services-section .split-word", {
+            scrollTrigger: {
+              trigger: ".services-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            yPercent: 105,
+            filter: "blur(6px)",
+            duration: 0.82,
+            stagger: 0.055,
+            ease,
+          });
+
+          gsap.from(".service-card", {
+            scrollTrigger: {
+              trigger: ".service-grid",
+              start: "top 82%",
+              once: true,
+            },
+            autoAlpha: 0,
+            y: mobile ? 36 : 58,
+            rotateX: mobile ? 0 : -8,
+            transformOrigin: "center bottom",
+            duration: 0.78,
+            stagger: 0.13,
+            ease,
+          });
+
+          gsap.from(".destinations-heading", {
+            scrollTrigger: {
+              trigger: ".destinations-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: mobile ? -24 : -56,
+            duration: 0.9,
+            ease,
+          });
+
+          gsap.from(".destinations-section .section-heading > p", {
+            scrollTrigger: {
+              trigger: ".destinations-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: mobile ? 20 : 46,
+            duration: 0.82,
+            delay: 0.12,
+            ease,
+          });
+
+          gsap.from(".filter-row", {
+            scrollTrigger: {
+              trigger: ".filter-row",
+              start: "top 88%",
+              once: true,
+            },
+            autoAlpha: 0,
+            scale: 0.97,
+            duration: 0.65,
+            ease,
+          });
+
+          gsap.from(".destination-card", {
+            scrollTrigger: {
+              trigger: ".destination-grid",
+              start: "top 84%",
+              once: true,
+            },
+            autoAlpha: 0,
+            y: 42,
+            duration: 0.75,
+            stagger: 0.11,
+            ease,
+          });
+
+          gsap.from(".destination-image-wrap img", {
+            scrollTrigger: {
+              trigger: ".destination-grid",
+              start: "top 84%",
+              once: true,
+            },
+            scale: 1.12,
+            duration: 1.15,
+            stagger: 0.11,
+            ease: "power2.out",
+          });
+
+          gsap.from(".story-card-column", {
+            scrollTrigger: {
+              trigger: ".story-section",
+              start: "top 76%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: mobile ? -28 : -78,
+            duration: 0.95,
+            ease,
+          });
+
+          gsap.from(".story-editorial", {
+            scrollTrigger: {
+              trigger: ".story-section",
+              start: "top 76%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: mobile ? 28 : 78,
+            duration: 0.95,
+            delay: 0.12,
+            ease,
+          });
+
+          gsap.from(".editorial-row img", {
+            scrollTrigger: {
+              trigger: ".editorial-row",
+              start: "top 84%",
+              once: true,
+            },
+            clipPath: "inset(0 0 100% 0 round 18px)",
+            scale: 1.08,
+            duration: 1.05,
+            ease,
+          });
+
+          gsap.from(".editorial-row svg", {
+            scrollTrigger: {
+              trigger: ".editorial-row",
+              start: "top 84%",
+              once: true,
+            },
+            autoAlpha: 0,
+            rotate: -35,
+            scale: 0.6,
+            duration: 0.7,
+            delay: 0.45,
+            ease: "back.out(1.7)",
+          });
+
+          gsap.from(".review-copy > *", {
+            scrollTrigger: {
+              trigger: ".reviews-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: -28,
+            duration: 0.68,
+            stagger: 0.1,
+            ease,
+          });
+
+          gsap.from(".portrait-stack img", {
+            scrollTrigger: {
+              trigger: ".reviews-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            scale: 0.88,
+            rotate: mobile ? 0 : -3,
+            duration: 1,
+            ease,
+          });
+
+          gsap.from(".portrait-back", {
+            scrollTrigger: {
+              trigger: ".reviews-section",
+              start: "top 78%",
+              once: true,
+            },
+            autoAlpha: 0,
+            x: 48,
+            duration: 0.9,
+            stagger: 0.12,
+            ease,
+          });
+
+          gsap.from(".cta-section > .eyebrow, .cta-section > h2, .cta-section > p, .cta-section > .button", {
+            scrollTrigger: {
+              trigger: ".cta-section",
+              start: "top 76%",
+              once: true,
+            },
+            autoAlpha: 0,
+            y: 34,
+            duration: 0.75,
+            stagger: 0.1,
+            ease,
+          });
+
+          gsap.from(".footer-grid > div", {
+            scrollTrigger: {
+              trigger: ".site-footer",
+              start: "top 90%",
+              once: true,
+            },
+            autoAlpha: 0,
+            y: 28,
+            duration: 0.7,
+            stagger: 0.08,
+            ease,
+          });
+        },
+      );
+
+      return () => media.revert();
+    },
+    { scope: appRef },
+  );
+
   return (
-    <div className="page-shell">
+    <div className="page-shell" ref={appRef}>
       <Header />
       <main>
         <Hero />

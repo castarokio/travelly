@@ -201,18 +201,26 @@ select:focus-visible {
   overflow: hidden;
   border-radius: 26px;
   color: #fff;
-  background:
-    linear-gradient(180deg, rgba(15, 95, 184, 0.5) 0%, rgba(17, 116, 201, 0.14) 60%, transparent 100%),
-    url("/images/hero-plane.jpg") center 54% / cover no-repeat,
-    #287ac7;
+  background: #287ac7;
 }
 
 .hero-sky::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(11, 76, 153, 0.24), transparent 42%, rgba(255, 255, 255, 0.08));
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(15, 95, 184, 0.5) 0%, rgba(17, 116, 201, 0.14) 60%, transparent 100%),
+    linear-gradient(180deg, rgba(11, 76, 153, 0.24), transparent 42%, rgba(255, 255, 255, 0.08));
   pointer-events: none;
+}
+
+.hero-media {
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  background: url("/images/hero-plane.jpg") center 54% / cover no-repeat;
+  will-change: transform;
 }
 
 .hero-note {
@@ -220,6 +228,7 @@ select:focus-visible {
   position: absolute;
   top: 58px;
   left: 50%;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -228,10 +237,20 @@ select:focus-visible {
   letter-spacing: 0.04em;
 }
 
+.hero-note-word,
+.trusted-word {
+  display: inline-block;
+}
+
+.hero-note-plane {
+  flex: 0 0 auto;
+}
+
 .traveler-proof {
   position: absolute;
   top: 104px;
   left: 50%;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -254,6 +273,11 @@ select:focus-visible {
   object-fit: cover;
 }
 
+.trusted-copy {
+  display: inline-flex;
+  gap: 0.25em;
+}
+
 .hero h1 {
   margin: 0;
   width: 100%;
@@ -266,8 +290,20 @@ select:focus-visible {
   text-align: center;
 }
 
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.hero-title-line {
+  display: block;
+  will-change: transform, opacity, filter;
+}
+
 .hero-orbit {
   position: absolute;
+  z-index: 1;
   border: 1px solid rgba(255, 255, 255, 0.19);
   border-radius: 50%;
 }
@@ -386,6 +422,24 @@ select:focus-visible {
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1.05;
   letter-spacing: -0.055em;
+}
+
+.split-heading-text {
+  overflow-wrap: anywhere;
+}
+
+.split-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 0.24em;
+  margin-bottom: -0.12em;
+  padding-bottom: 0.12em;
+  vertical-align: top;
+}
+
+.split-word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
 .section-heading p,
@@ -1830,6 +1884,12 @@ select:focus-visible {
 
   .gallery-float {
     animation: none;
+  }
+
+  @media (max-width: 560px) {
+    .booking-shell {
+      transform: none;
+    }
   }
 
   *,
