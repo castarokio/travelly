@@ -699,9 +699,10 @@ export default function App() {
         {
           reduceMotion: "(prefers-reduced-motion: reduce)",
           mobile: "(max-width: 700px)",
+          desktop: "(min-width: 901px) and (hover: hover) and (pointer: fine)",
         },
         ({ conditions }) => {
-          const { reduceMotion, mobile } = conditions;
+          const { reduceMotion, mobile, desktop } = conditions;
 
           if (reduceMotion) {
             gsap.set(
@@ -974,6 +975,195 @@ export default function App() {
             stagger: 0.08,
             ease,
           });
+
+          if (!desktop) return;
+
+          gsap.to(".hero-orbit-one", {
+            rotate: 8,
+            scale: 1.035,
+            duration: 12,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+
+          gsap.to(".hero-orbit-two", {
+            rotate: -6,
+            scale: 1.025,
+            duration: 15,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+
+          gsap.to(".hero-media", {
+            yPercent: 7,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".hero",
+              start: "top top",
+              end: "bottom top",
+              scrub: 1.1,
+            },
+          });
+
+          gsap.to(".hero h1", {
+            y: -34,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".hero",
+              start: "top top",
+              end: "bottom top",
+              scrub: 1,
+            },
+          });
+
+          gsap.to(".destination-card:nth-child(odd)", {
+            y: -18,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".destination-grid",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.2,
+            },
+          });
+
+          gsap.to(".destination-card:nth-child(even)", {
+            y: 18,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".destination-grid",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.2,
+            },
+          });
+
+          gsap.to(".destination-image-wrap img", {
+            yPercent: 5,
+            scale: 1.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".destination-grid",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          });
+
+          gsap.fromTo(
+            ".story-card img",
+            { yPercent: -5, scale: 1.08 },
+            {
+              yPercent: 5,
+              ease: "none",
+              scrollTrigger: {
+                trigger: ".story-section",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1,
+              },
+            },
+          );
+
+          gsap.to(".portrait-back-one", {
+            x: 28,
+            y: -20,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".reviews-section",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.15,
+            },
+          });
+
+          gsap.to(".portrait-back-two", {
+            x: 48,
+            y: 24,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".reviews-section",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.3,
+            },
+          });
+
+          const hero = appRef.current?.querySelector(".hero-sky");
+          const heroMediaX = gsap.quickTo(".hero-media", "x", {
+            duration: 0.8,
+            ease: "power3.out",
+          });
+          const heroTitleX = gsap.quickTo(".hero h1", "x", {
+            duration: 0.75,
+            ease: "power3.out",
+          });
+          const orbitOneX = gsap.quickTo(".hero-orbit-one", "x", {
+            duration: 1,
+            ease: "power3.out",
+          });
+          const orbitTwoX = gsap.quickTo(".hero-orbit-two", "x", {
+            duration: 1.2,
+            ease: "power3.out",
+          });
+
+          const moveHero = (event) => {
+            const bounds = hero.getBoundingClientRect();
+            const progress = (event.clientX - bounds.left) / bounds.width - 0.5;
+            heroMediaX(progress * 14);
+            heroTitleX(progress * -12);
+            orbitOneX(progress * 22);
+            orbitTwoX(progress * -28);
+          };
+
+          const resetHero = () => {
+            heroMediaX(0);
+            heroTitleX(0);
+            orbitOneX(0);
+            orbitTwoX(0);
+          };
+
+          const interactiveCards = [
+            ...appRef.current.querySelectorAll(".service-card, .destination-card"),
+          ];
+          const liftCard = (event) => {
+            const isServiceCard = event.currentTarget.classList.contains("service-card");
+            gsap.to(event.currentTarget, {
+              y: isServiceCard ? -8 : undefined,
+              scale: 1.015,
+              duration: 0.32,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          };
+          const settleCard = (event) => {
+            const isServiceCard = event.currentTarget.classList.contains("service-card");
+            gsap.to(event.currentTarget, {
+              y: isServiceCard ? 0 : undefined,
+              scale: 1,
+              duration: 0.45,
+              ease: "power3.out",
+              overwrite: "auto",
+            });
+          };
+
+          hero?.addEventListener("pointermove", moveHero);
+          hero?.addEventListener("pointerleave", resetHero);
+          interactiveCards.forEach((card) => {
+            card.addEventListener("pointerenter", liftCard);
+            card.addEventListener("pointerleave", settleCard);
+          });
+
+          return () => {
+            hero?.removeEventListener("pointermove", moveHero);
+            hero?.removeEventListener("pointerleave", resetHero);
+            interactiveCards.forEach((card) => {
+              card.removeEventListener("pointerenter", liftCard);
+              card.removeEventListener("pointerleave", settleCard);
+            });
+          };
         },
       );
 
