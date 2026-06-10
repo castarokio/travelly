@@ -809,104 +809,222 @@ select:focus-visible {
 }
 
 .gallery-row {
-  height: 245px;
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 520px;
   margin-top: 72px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  perspective: 1100px;
+  margin-right: auto;
+  margin-left: auto;
+  perspective: 1200px;
 }
 
 .gallery-card {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  flex: 1;
-  min-width: 0;
-  height: 128px;
+  --reveal-delay: 0ms;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 13%);
   opacity: 0;
-  transform: translate3d(0, 54px, 0) scale(0.94);
-  transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--gallery-index) * 95ms);
+  cursor: pointer;
+  transform: translateY(40px) scale(0.95);
   will-change: transform, opacity;
+  transition:
+    opacity 700ms var(--reveal-delay) cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms var(--reveal-delay) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 250ms ease;
+  transform-style: preserve-3d;
 }
 
 .gallery-row.is-visible .gallery-card {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .gallery-float {
   width: 100%;
-  height: 100%;
-  animation: gallery-float var(--float-duration) ease-in-out var(--float-delay)
-    infinite;
-  transform-origin: center;
+  height: calc(100% + 44px);
+  margin-top: -22px;
+  animation-delay: 800ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
 }
 
-.gallery-card img {
+.gallery-float img {
   display: block;
   width: 100%;
   height: 100%;
-  flex: 1;
-  min-width: 0;
-  border-radius: 15px;
   object-fit: cover;
-  box-shadow: 0 12px 28px rgb(30 47 76 / 8%);
-  filter: saturate(0.94) brightness(0.98);
-  transform:
-    rotateX(var(--tilt-x))
-    rotateY(var(--tilt-y))
-    rotateZ(var(--resting-rotation))
-    scale(1);
-  transition:
-    transform 220ms ease-out,
-    filter 300ms ease,
-    box-shadow 300ms ease;
-  transform-style: preserve-3d;
-  will-change: transform;
   user-select: none;
 }
 
-.gallery-row .gallery-1,
-.gallery-row .gallery-4 {
+.gallery-card:nth-child(1) {
+  --reveal-delay: 0ms;
+  top: 110px;
+  left: 4%;
+  width: 160px;
+  height: 280px;
+}
+
+.gallery-card:nth-child(1) .gallery-float {
+  animation-name: gallery-float-a;
+  animation-duration: 4.2s;
+}
+
+.gallery-card:nth-child(2) {
+  --reveal-delay: 150ms;
+  top: 60px;
+  left: 19%;
+  width: 165px;
+  height: 200px;
+}
+
+.gallery-card:nth-child(2) .gallery-float {
+  animation-name: gallery-float-b;
+  animation-duration: 3.8s;
+}
+
+.gallery-card:nth-child(3) {
+  --reveal-delay: 300ms;
+  top: 200px;
+  left: 33%;
+  width: 160px;
+  height: 200px;
+}
+
+.gallery-card:nth-child(3) .gallery-float {
+  animation-name: gallery-float-c;
+  animation-duration: 5s;
+}
+
+.gallery-card:nth-child(4) {
+  --reveal-delay: 450ms;
+  top: 95px;
+  left: 50%;
+  width: 165px;
+  height: 270px;
+}
+
+.gallery-card:nth-child(4) .gallery-float {
+  animation-name: gallery-float-a;
+  animation-duration: 4.5s;
+}
+
+.gallery-card:nth-child(5) {
+  --reveal-delay: 600ms;
+  top: 55px;
+  left: 65%;
+  width: 165px;
   height: 190px;
 }
 
-.gallery-row .gallery-2,
-.gallery-row .gallery-5 {
-  align-self: flex-start;
+.gallery-card:nth-child(5) .gallery-float {
+  animation-name: gallery-float-b;
+  animation-duration: 3.5s;
 }
 
-.gallery-row .gallery-3,
-.gallery-row .gallery-6 {
-  align-self: flex-end;
+.gallery-card:nth-child(6) {
+  --reveal-delay: 750ms;
+  top: 215px;
+  left: 80%;
+  width: 160px;
+  height: 200px;
+}
+
+.gallery-card:nth-child(6) .gallery-float {
+  animation-name: gallery-float-c;
+  animation-duration: 4.8s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .gallery-card:hover {
-    z-index: 2;
+    z-index: 10;
+    box-shadow: 0 28px 56px rgb(0 0 0 / 20%);
   }
 
-  .gallery-card:hover img {
-    box-shadow: 0 24px 52px rgb(30 47 76 / 22%);
-    filter: saturate(1.13) brightness(1.04);
-    transform:
-      rotateX(var(--tilt-x))
-      rotateY(var(--tilt-y))
-      rotateZ(0deg)
-      scale(1.055);
+  .gallery-card:hover .gallery-float {
+    animation-play-state: paused;
   }
 }
 
-@keyframes gallery-float {
+@keyframes gallery-float-a {
   0%,
   100% {
-    transform: translate3d(0, -4px, 0) rotate(-0.45deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translate3d(0, 7px, 0) rotate(0.45deg);
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes gallery-float-b {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes gallery-float-c {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-22px);
+  }
+}
+
+@media (max-width: 700px) {
+  .gallery-row {
+    height: 340px;
+    margin-right: -10px;
+    margin-left: -10px;
+  }
+
+  .gallery-card:nth-child(1) {
+    top: 70px;
+    left: 2%;
+    width: 95px;
+    height: 170px;
+  }
+
+  .gallery-card:nth-child(2) {
+    top: 35px;
+    left: 20%;
+    width: 100px;
+    height: 120px;
+  }
+
+  .gallery-card:nth-child(3) {
+    top: 120px;
+    left: 35%;
+    width: 95px;
+    height: 120px;
+  }
+
+  .gallery-card:nth-child(4) {
+    top: 55px;
+    left: 52%;
+    width: 100px;
+    height: 160px;
+  }
+
+  .gallery-card:nth-child(5) {
+    top: 28px;
+    left: 67%;
+    width: 100px;
+    height: 115px;
+  }
+
+  .gallery-card:nth-child(6) {
+    top: 128px;
+    left: 82%;
+    width: 97px;
+    height: 120px;
   }
 }
 
@@ -1290,18 +1408,6 @@ select:focus-visible {
     padding: 5px;
   }
 
-  .gallery-row {
-    height: 190px;
-    margin-left: -10px;
-    margin-right: -10px;
-    gap: 8px;
-    overflow: hidden;
-  }
-
-  .gallery-card {
-    min-width: 95px;
-  }
-
   .footer-grid > div {
     min-height: 0;
     padding: 34px 24px;
@@ -1339,11 +1445,6 @@ select:focus-visible {
 
   .gallery-float {
     animation: none;
-  }
-
-  .gallery-card img,
-  .gallery-card:hover img {
-    transform: none;
   }
 
   *,

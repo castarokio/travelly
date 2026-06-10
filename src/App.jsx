@@ -471,7 +471,7 @@ function CTA() {
           observer.disconnect();
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.18 },
     );
 
     observer.observe(galleryElement);
@@ -483,16 +483,22 @@ function CTA() {
 
     const card = event.currentTarget;
     const bounds = card.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    const rotateX = -(
+      (event.clientY - bounds.top - bounds.height / 2) /
+      10
+    );
+    const rotateY =
+      (event.clientX - bounds.left - bounds.width / 2) / 10;
 
-    card.style.setProperty("--tilt-x", `${-y * 9}deg`);
-    card.style.setProperty("--tilt-y", `${x * 11}deg`);
+    card.style.transitionDelay = "0ms";
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.07)`;
+    card.style.zIndex = "10";
   }
 
   function resetTilt(event) {
-    event.currentTarget.style.setProperty("--tilt-x", "0deg");
-    event.currentTarget.style.setProperty("--tilt-y", "0deg");
+    event.currentTarget.style.transitionDelay = "0ms";
+    event.currentTarget.style.transform = "";
+    event.currentTarget.style.zIndex = "";
   }
 
   return (
@@ -515,12 +521,6 @@ function CTA() {
           <div
             key={id}
             className={`gallery-card gallery-${index + 1}`}
-            style={{
-              "--gallery-index": index,
-              "--float-delay": `${index * -0.65}s`,
-              "--float-duration": `${5.4 + (index % 3) * 0.8}s`,
-              "--resting-rotation": `${index % 2 === 0 ? -1.25 : 1.25}deg`,
-            }}
             onPointerMove={tiltCard}
             onPointerLeave={resetTilt}
           >
