@@ -80,9 +80,13 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  border: 0;
+  color: inherit;
+  background: transparent;
   font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.04em;
+  cursor: pointer;
 }
 
 .logo-mark {
@@ -97,10 +101,12 @@ select:focus-visible {
 
 .app-pill {
   padding: 7px 13px;
+  border: 0;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 700;
   background: var(--soft);
+  cursor: pointer;
 }
 
 .desktop-nav {
@@ -111,11 +117,17 @@ select:focus-visible {
   font-weight: 650;
 }
 
-.desktop-nav a {
+.desktop-nav button {
   position: relative;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
 }
 
-.desktop-nav a::after {
+.desktop-nav button::after {
   content: "";
   position: absolute;
   left: 0;
@@ -126,7 +138,8 @@ select:focus-visible {
   transition: right 180ms ease;
 }
 
-.desktop-nav a:hover::after {
+.desktop-nav button:hover::after,
+.desktop-nav button.active::after {
   right: 0;
 }
 
@@ -862,6 +875,463 @@ select:focus-visible {
   margin: 18px auto 28px;
 }
 
+.booking-demo-section {
+  padding-top: 40px;
+}
+
+.demo-panel {
+  padding: 42px;
+  display: grid;
+  grid-template-columns: 1fr 0.92fr auto;
+  align-items: center;
+  gap: 34px;
+  border-radius: 28px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(52, 104, 245, 0.96), rgba(16, 34, 77, 0.96)),
+    url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=72")
+      center/cover;
+  box-shadow: 0 26px 70px rgba(32, 76, 199, 0.22);
+}
+
+.demo-panel .eyebrow {
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff;
+}
+
+.demo-panel h2 {
+  margin: 18px 0 14px;
+  max-width: 500px;
+  font-size: clamp(27px, 3vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+
+.demo-panel p {
+  margin: 0;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.demo-steps {
+  display: grid;
+  gap: 10px;
+}
+
+.demo-steps span {
+  min-height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.demo-steps strong {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+}
+
+.page-section {
+  padding: 78px 80px 96px;
+}
+
+.offers-page,
+.checkout-page,
+.offer-detail-page,
+.confirmation-page {
+  min-height: 720px;
+  background:
+    linear-gradient(180deg, #f8fafc 0%, #fff 42%),
+    #fff;
+}
+
+.checkout-heading {
+  margin-bottom: 36px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.checkout-heading h1,
+.offer-detail-copy h1,
+.confirmation-card h1 {
+  margin: 0;
+  max-width: 680px;
+  font-size: clamp(34px, 4vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+
+.checkout-heading p:not(.eyebrow),
+.offer-detail-copy p,
+.confirmation-card > p {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.offers-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.offer-card {
+  padding: 10px;
+  border: 1px solid #eef0f3;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(22, 31, 46, 0.045);
+}
+
+.offer-card .destination-title,
+.offer-card .destination-meta,
+.offer-summary,
+.offer-actions {
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.offer-summary {
+  margin: 14px 0 0;
+  min-height: 74px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.offer-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+}
+
+.offer-actions .button {
+  flex: 1;
+  padding: 0 12px;
+}
+
+.back-button {
+  margin-bottom: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.offer-detail-hero {
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: 44px;
+  align-items: center;
+}
+
+.offer-detail-hero > img {
+  width: 100%;
+  aspect-ratio: 1.17 / 1;
+  border-radius: 28px;
+  object-fit: cover;
+  box-shadow: 0 28px 72px rgba(22, 31, 46, 0.11);
+}
+
+.offer-detail-copy .eyebrow {
+  display: inline-block;
+  margin: 0 0 18px;
+}
+
+.offer-detail-copy .button {
+  margin-top: 16px;
+}
+
+.offer-detail-stats {
+  margin: 28px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.offer-detail-stats span {
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.offer-detail-grid {
+  margin-top: 52px;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 34px;
+}
+
+.offer-detail-grid h2 {
+  margin: 0 0 20px;
+  font-size: 26px;
+  letter-spacing: -0.045em;
+}
+
+.included-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+}
+
+.included-list li {
+  min-height: 48px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.included-list svg {
+  color: #1aa866;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 34px;
+  align-items: start;
+}
+
+.customer-form {
+  padding: 30px;
+  border: 1px solid #eef0f3;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(22, 31, 46, 0.055);
+}
+
+.customer-form fieldset {
+  margin: 0 0 28px;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  border: 0;
+}
+
+.customer-form legend {
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.customer-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.customer-form input,
+.customer-form select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  background: #f9fafb;
+  font-size: 13px;
+  outline: 0;
+}
+
+.customer-form input:focus,
+.customer-form select:focus {
+  border-color: rgba(52, 104, 245, 0.62);
+  box-shadow: 0 0 0 4px rgba(52, 104, 245, 0.1);
+}
+
+.form-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.payment-preview {
+  min-height: 52px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  color: #214171;
+  background: #eef4ff;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.payment-preview svg {
+  flex: 0 0 auto;
+  color: var(--blue);
+}
+
+.checkout-message {
+  min-height: 20px;
+  margin: 14px 0;
+  color: var(--coral);
+  font-size: 12px;
+}
+
+.submit-booking {
+  width: 100%;
+  min-height: 50px;
+}
+
+.checkout-side {
+  display: grid;
+  gap: 18px;
+}
+
+.checkout-side .offer-actions {
+  display: none;
+}
+
+.price-summary {
+  padding: 24px;
+  border: 1px solid #eef0f3;
+  border-radius: 24px;
+  background: #11131a;
+  color: #fff;
+  box-shadow: 0 26px 60px rgba(17, 19, 26, 0.16);
+}
+
+.price-summary h3 {
+  margin: 0 0 18px;
+  font-size: 15px;
+}
+
+.price-summary dl {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.price-summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+.price-summary dt,
+.price-summary dd {
+  margin: 0;
+}
+
+.price-summary dd {
+  color: #fff;
+  font-weight: 800;
+}
+
+.price-summary .total-row {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 14px;
+}
+
+.price-summary .total-row dd {
+  color: #79a0ff;
+  font-size: 19px;
+}
+
+.price-summary p {
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.confirmation-page {
+  display: grid;
+  place-items: center;
+}
+
+.confirmation-card {
+  width: min(760px, 100%);
+  padding: 48px;
+  border-radius: 34px;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 30px 80px rgba(22, 31, 46, 0.1);
+}
+
+.confirmation-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #1aa866;
+}
+
+.confirmation-card .eyebrow {
+  display: inline-block;
+  margin: 0 0 16px;
+}
+
+.confirmation-card > p {
+  margin: 18px auto 0;
+}
+
+.confirmation-grid {
+  margin: 34px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  text-align: left;
+}
+
+.confirmation-grid span {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.confirmation-grid strong {
+  color: var(--ink);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 .gallery-row {
   position: relative;
   width: 100%;
@@ -1109,11 +1579,17 @@ select:focus-visible {
 }
 
 .footer-grid > div:not(.footer-brand) > a,
+.footer-grid > div:not(.footer-brand) > button,
 .footer-grid > div:not(.footer-brand) > span {
   margin: 12px 0;
   display: block;
+  padding: 0;
+  border: 0;
   color: var(--muted);
+  background: transparent;
   font-size: 11px;
+  text-align: left;
+  cursor: pointer;
 }
 
 .footer-brand p {
@@ -1311,8 +1787,26 @@ select:focus-visible {
       background 180ms ease;
   }
 
+  .mobile-nav-link {
+    min-height: 48px;
+    padding: 14px 8px;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.82);
+    background: transparent;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      color 180ms ease,
+      padding-left 180ms ease,
+      background 180ms ease;
+  }
+
   .mobile-nav > a:not(.button):hover,
-  .mobile-nav > a:not(.button):focus-visible {
+  .mobile-nav > a:not(.button):focus-visible,
+  .mobile-nav-link:hover,
+  .mobile-nav-link:focus-visible {
     padding-left: 14px;
     color: #fff;
     background: rgba(255, 255, 255, 0.08);
@@ -1398,6 +1892,34 @@ select:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 
+  .demo-panel,
+  .offer-detail-hero,
+  .offer-detail-grid,
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-panel {
+    align-items: start;
+  }
+
+  .offers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page-section {
+    padding: 68px 36px 78px;
+  }
+
+  .checkout-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .checkout-side {
+    grid-row: 1;
+  }
+
   .footer-grid > div:nth-child(2) {
     border-right: 0;
   }
@@ -1437,7 +1959,8 @@ select:focus-visible {
     font-size: 13px;
   }
 
-  .mobile-nav > a:not(.button) {
+  .mobile-nav > a:not(.button),
+  .mobile-nav-link {
     min-height: 48px;
     display: flex;
     align-items: center;
@@ -1620,8 +2143,64 @@ select:focus-visible {
   .destination-grid,
   .story-card,
   .editorial-row,
-  .footer-grid {
+  .footer-grid,
+  .offers-grid,
+  .included-list,
+  .form-pair,
+  .confirmation-grid {
     grid-template-columns: 1fr;
+  }
+
+  .page-section {
+    padding: 42px 20px 58px;
+  }
+
+  .booking-demo-section {
+    padding-top: 28px;
+  }
+
+  .demo-panel {
+    padding: 26px;
+    border-radius: 22px;
+    gap: 24px;
+  }
+
+  .demo-panel .button {
+    width: 100%;
+  }
+
+  .offer-actions {
+    flex-direction: column;
+  }
+
+  .offer-summary {
+    min-height: 0;
+    font-size: 13px;
+  }
+
+  .offer-detail-hero {
+    gap: 26px;
+  }
+
+  .offer-detail-hero > img {
+    border-radius: 20px;
+  }
+
+  .checkout-heading h1,
+  .offer-detail-copy h1,
+  .confirmation-card h1 {
+    font-size: 36px;
+  }
+
+  .customer-form,
+  .price-summary,
+  .confirmation-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .checkout-side {
+    gap: 14px;
   }
 
   .destination-grid {
@@ -1788,6 +2367,7 @@ select:focus-visible {
   }
 
   .footer-grid > div:not(.footer-brand) > a,
+  .footer-grid > div:not(.footer-brand) > button,
   .footer-grid > div:not(.footer-brand) > span {
     margin: 10px 0;
     font-size: 14px;
